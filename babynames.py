@@ -30,10 +30,12 @@ Suggested milestones for incremental development:
  - Build the [year, 'name rank', ... ] list and print it
  - Fix main() to use the extracted_names list
 """
+__author__ = """Bethany Folino"""
 
 import sys
-import re
+# import re
 import argparse
+import itertools
 
 
 def extract_names(filename):
@@ -43,9 +45,12 @@ def extract_names(filename):
     the name-rank strings in alphabetical order.
     ['2006', 'Aaliyah 91', 'Aaron 57', 'Abagail 895', ...]
     """
-    names = []
-    # +++your code here+++
-    return names
+    # names = []
+    with open(filename) as text:
+        for i in range(len(text) - 1):
+            data = itertools.islice(filename, 49, 1048)
+            print(list(data))
+    # return names
 
 
 def create_parser():
@@ -72,10 +77,10 @@ def main(args):
         parser.print_usage()
         sys.exit(1)
 
-    file_list = ns.files
+    # file_list = ns.files
 
     # option flag
-    create_summary = ns.summaryfile
+    # create_summary = ns.summaryfile
 
     # For each filename, call `extract_names()` with that single file.
     # Format the resulting list as a vertical list (separated by newline \n).
