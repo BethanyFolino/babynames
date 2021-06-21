@@ -30,12 +30,11 @@ Suggested milestones for incremental development:
  - Build the [year, 'name rank', ... ] list and print it
  - Fix main() to use the extracted_names list
 """
-__author__ = """Bethany Folino"""
+__author__ = """Bethany Folino with help from Jacob Short"""
 
 import sys
-# import re
+import re
 import argparse
-import itertools
 
 
 def extract_names(filename):
@@ -45,12 +44,34 @@ def extract_names(filename):
     the name-rank strings in alphabetical order.
     ['2006', 'Aaliyah 91', 'Aaron 57', 'Abagail 895', ...]
     """
-    # names = []
-    with open(filename) as text:
-        for i in range(len(text) - 1):
-            data = itertools.islice(filename, 49, 1048)
-            print(list(data))
-    # return names
+
+    namesonly = []
+    ranksonly = []
+    findnamesranks = re.compile(r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>')
+    findyear = re.compile(r"\d\d\d\d")
+    with open(filename) as file:
+        year_match = findyear.findall(filename)
+        year = year_match[0]
+        for line in findnamesranks.findall(file.read()):
+
+            rank = line[0]
+            boyname = line[1]
+            girlname = line[2]
+
+            if boyname not in namesonly:
+                namesonly.append(boyname)
+                ranksonly.append(rank)
+
+            if girlname not in namesonly:
+                namesonly.append(girlname)
+                ranksonly.append(rank)
+        listzipped = zip(namesonly, ranksonly)
+        listnottuple = list(listzipped)
+    sortedzipped = sorted(listnottuple)
+    names = [f"{name} {rank}" for name, rank in sortedzipped]
+    names.insert(0, year)
+
+    return names
 
 
 def create_parser():
@@ -77,10 +98,10 @@ def main(args):
         parser.print_usage()
         sys.exit(1)
 
-    # file_list = ns.files
+    file_list = ns.files
 
     # option flag
-    # create_summary = ns.summaryfile
+    create_summary = ns.summaryfile
 
     # For each filename, call `extract_names()` with that single file.
     # Format the resulting list as a vertical list (separated by newline \n).
@@ -88,6 +109,12 @@ def main(args):
     # or to write the list to a summary file (e.g. `baby1990.html.summary`).
 
     # +++your code here+++
+    for file in file_list:
+        text = "\n".join(extract_names(file))
+        if not create_summary:
+            print(text)
+        else:
+            text
 
 
 if __name__ == '__main__':
