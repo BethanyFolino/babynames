@@ -114,7 +114,8 @@ def main(args):
         if not create_summary:
             print(text)
         else:
-            text
+            with open(f"{file}.summary", "w") as writefile:
+                writefile.write(text)
 
 
 if __name__ == '__main__':
